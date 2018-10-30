@@ -1,6 +1,7 @@
 # CI/CD Docker
 
 ### Docker hub
+
 [plimble/ci](https://hub.docker.com/r/plimble/ci/)
 
 ### Tags
@@ -17,16 +18,18 @@ DOCKER_VERSION=17.04.0-ce
 KUBECTL_VERSION=v1.10.3
 RANCHER_CLI_VERSION=v2.0.4
 HELM_VERSION=v2.9.1
-GOLANG_VERSION=1.11
+GOLANG_VERSION=1.11.1
 ```
 
 ## Tools
+
 - go
   - dep
   - go-bindata
 - node
   - yarn
   - severless
+  - aws-cli
 - rancher
 - kubectl
 - helm

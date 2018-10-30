@@ -15,3 +15,4 @@ docker build -t plimble/ci:vsts \
   -f vsts/Dockerfile \
   .
 
+docker push plimble/ci:vsts

@@ -12,39 +12,38 @@ ARG GOLANG_VERSION=1.11
 
 RUN set -eux; \
 	apk add --no-cache --virtual .build-deps \
-		bash \
-		gcc \
-		musl-dev \
-		openssl \
-		go \
+	bash \
+	gcc \
+	musl-dev \
+	openssl \
+	go \
 	; \
 	export \
-# set GOROOT_BOOTSTRAP such that we can actually build Go
-		GOROOT_BOOTSTRAP="$(go env GOROOT)" \
-# ... and set "cross-building" related vars to the installed system's values so that we create a build targeting the proper arch
-# (for example, if our build host is GOARCH=amd64, but our build env/image is GOARCH=386, our build needs GOARCH=386)
-		GOOS="$(go env GOOS)" \
-		GOARCH="$(go env GOARCH)" \
-		GOHOSTOS="$(go env GOHOSTOS)" \
-		GOHOSTARCH="$(go env GOHOSTARCH)" \
+	# set GOROOT_BOOTSTRAP such that we can actually build Go
+	GOROOT_BOOTSTRAP="$(go env GOROOT)" \
+	# ... and set "cross-building" related vars to the installed system's values so that we create a build targeting the proper arch
+	# (for example, if our build host is GOARCH=amd64, but our build env/image is GOARCH=386, our build needs GOARCH=386)
+	GOOS="$(go env GOOS)" \
+	GOARCH="$(go env GOARCH)" \
+	GOHOSTOS="$(go env GOHOSTOS)" \
+	GOHOSTARCH="$(go env GOHOSTARCH)" \
 	; \
-# also explicitly set GO386 and GOARM if appropriate
-# https://github.com/docker-library/golang/issues/184
+	# also explicitly set GO386 and GOARM if appropriate
+	# https://github.com/docker-library/golang/issues/184
 	apkArch="$(apk --print-arch)"; \
 	case "$apkArch" in \
-		armhf) export GOARM='6' ;; \
-		x86) export GO386='387' ;; \
+	armhf) export GOARM='6' ;; \
+	x86) export GO386='387' ;; \
 	esac; \
 	\
 	wget -O go.tgz "https://golang.org/dl/go$GOLANG_VERSION.src.tar.gz"; \
-	echo 'afc1e12f5fe49a471e3aae7d906c73e9d5b1fdd36d52d72652dde8f6250152fb *go.tgz' | sha256sum -c -; \
 	tar -C /usr/local -xzf go.tgz; \
 	rm go.tgz; \
 	\
 	cd /usr/local/go/src; \
 	for p in /go-alpine-patches/*.patch; do \
-		[ -f "$p" ] || continue; \
-		patch -p2 -i "$p"; \
+	[ -f "$p" ] || continue; \
+	patch -p2 -i "$p"; \
 	done; \
 	./make.bash; \
 	\
@@ -61,13 +60,13 @@ ENV GO111MODULE=auto
 RUN mkdir -p "$GOPATH/src" "$GOPATH/bin" && chmod -R 777 "$GOPATH"
 
 RUN go get -u github.com/jteeuwen/go-bindata/... && \
-  curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh && \
-  mkdir -p ~/.ssh && \
-  chmod 700 ~/.ssh && \
-  ssh-keyscan gitlab.com >> ~/.ssh/known_hosts && \
-  ssh-keyscan github.com >> ~/.ssh/known_hosts && \
-  ssh-keyscan bitbucket.org >> ~/.ssh/known_hosts && \
-  chmod 644 ~/.ssh/known_hosts && \
+	curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh && \
+	mkdir -p ~/.ssh && \
+	chmod 700 ~/.ssh && \
+	ssh-keyscan gitlab.com >> ~/.ssh/known_hosts && \
+	ssh-keyscan github.com >> ~/.ssh/known_hosts && \
+	ssh-keyscan bitbucket.org >> ~/.ssh/known_hosts && \
+	chmod 644 ~/.ssh/known_hosts && \
 	npm install -g serverless
 
 WORKDIR $GOPATH
