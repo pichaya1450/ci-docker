@@ -30,6 +30,7 @@ GOLANG_VERSION=1.11.1
   - yarn
   - severless
   - aws-cli
+  - google-chrome
 - rancher
 - kubectl
 - helm
